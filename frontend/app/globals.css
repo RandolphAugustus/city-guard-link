@@ -305,7 +305,17 @@ body {
 }
 
 .form-input::placeholder {
-  color: #888;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.form-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.form-input:not(:disabled) {
+  cursor: text;
 }
 
 .form-input:focus {

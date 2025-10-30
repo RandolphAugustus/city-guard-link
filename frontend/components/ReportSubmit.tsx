@@ -109,7 +109,10 @@ export function ReportSubmit() {
   };
 
   const isLoading = fhevmStatus === "loading";
-  const canSubmit = !!address && !!instance && !!contractAddress && !isSubmitting && !isLoading;
+  // Allow typing in form fields when wallet is connected and contract exists
+  const canEdit = !!address && !!contractAddress;
+  // Only allow submit when FHEVM instance is ready
+  const canSubmit = canEdit && !!instance && !isSubmitting && !isLoading;
 
   return (
     <div className="form-container">
@@ -158,7 +161,7 @@ export function ReportSubmit() {
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter a descriptive title for your report"
               required
-              disabled={!canSubmit}
+              disabled={!canEdit}
             />
           </div>
 
@@ -171,7 +174,7 @@ export function ReportSubmit() {
               placeholder="Enter the sensitive information you want to encrypt and store securely"
               required
               rows={6}
-              disabled={!canSubmit}
+              disabled={!canEdit}
             />
           </div>
 
