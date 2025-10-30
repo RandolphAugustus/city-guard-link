@@ -33,10 +33,10 @@ export function ReportSubmit() {
   } = useMetaMaskEthersSigner();
 
   const { instance, status: fhevmStatus } = useFhevm({
-    provider: undefined,
+    provider: typeof window !== 'undefined' ? window.ethereum : undefined,
     chainId,
     initialMockChains,
-    enabled: !!chainId,
+    enabled: !!chainId && !!address,
   });
 
   const [title, setTitle] = useState("");

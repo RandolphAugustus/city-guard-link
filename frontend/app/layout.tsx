@@ -20,8 +20,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="cityguard-bg text-foreground antialiased">
-        <div className="fixed inset-0 w-full h-full cityguard-bg z-[-20]"></div>
+      <body className="cityguard-bg text-foreground antialiased min-h-screen">
         <Providers>
           <header className="header">
             <div className="header-content">
@@ -43,7 +42,7 @@ export default async function RootLayout({
               </div>
             </div>
           </header>
-          <main className="app-card">
+          <main className="app-card mx-4 sm:mx-auto">
             {children}
           </main>
         </Providers>
