@@ -40,11 +40,11 @@ export function ReportList() {
     initialMockChains,
   } = useMetaMaskEthersSigner();
 
-  const { instance, status: fhevmStatus } = useFhevm({
-    provider: undefined,
+  const { instance, status: fhevmStatus, refresh: refreshFhevm } = useFhevm({
+    provider: typeof window !== 'undefined' ? window.ethereum : undefined,
     chainId,
     initialMockChains,
-    enabled: !!chainId,
+    enabled: !!chainId && !!address,
   });
 
   const [reports, setReports] = useState<ReportMeta[]>([]);
@@ -168,6 +168,7 @@ export function ReportList() {
             instance={instance}
             ethersSigner={ethersSigner}
             fhevmStatus={fhevmStatus}
+            refreshFhevm={refreshFhevm}
           />
         ))}
       </div>
@@ -181,9 +182,10 @@ interface ReportItemProps {
   instance: ReturnType<typeof useFhevm>["instance"];
   ethersSigner: ReturnType<typeof useMetaMaskEthersSigner>["ethersSigner"];
   fhevmStatus: string;
+  refreshFhevm: () => void;
 }
 
-function ReportItem({ report, contractAddress, instance, ethersSigner, fhevmStatus }: ReportItemProps) {
+function ReportItem({ report, contractAddress, instance, ethersSigner, fhevmStatus, refreshFhevm }: ReportItemProps) {
   const { ethersReadonlyProvider } = useMetaMaskEthersSigner();
   const [decrypted, setDecrypted] = useState<string>("");
   const [busy, setBusy] = useState(false);
@@ -255,7 +257,7 @@ function ReportItem({ report, contractAddress, instance, ethersSigner, fhevmStat
     }
   };
 
-  const canDecrypt = !!instance && !!ethersSigner && fhevmStatus !== "loading" && !busy;
+  const canDecrypt = !!instance && !!ethersSigner && fhevmStatus === "ready" && !busy;
 
   return (
     <div className="report-item">
@@ -289,6 +291,21 @@ function ReportItem({ report, contractAddress, instance, ethersSigner, fhevmStat
             )}
           </button>
           {error && <span className="text-red-400 text-sm">{error}</span>}
+          {!canDecrypt && fhevmStatus !== "ready" && (
+            <div className="flex items-center gap-2">
+              <span className="text-yellow-400 text-sm">
+                FHEVM Status: {fhevmStatus}
+              </span>
+              {fhevmStatus === "error" && (
+                <button
+                  className="text-blue-400 text-sm underline"
+                  onClick={refreshFhevm}
+                >
+                  Retry
+                </button>
+              )}
+            </div>
+          )}
         </div>
       ) : (
         <div className="decrypted-content">
