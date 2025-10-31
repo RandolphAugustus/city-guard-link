@@ -106,6 +106,7 @@ contract CityGuard is SepoliaConfig {
             ReportStatus status
         )
     {
+        require(id < _reports.length, "Report does not exist");
         Report storage r = _reports[id];
         return (r.reporter, r.title, r.createdAt, r.status);
     }
@@ -114,6 +115,7 @@ contract CityGuard is SepoliaConfig {
     /// @param id The report ID
     /// @return data The ChaCha20 ciphertext bytes
     function getReportData(uint256 id) external view returns (bytes memory data) {
+        require(id < _reports.length, "Report does not exist");
         return _reports[id].encryptedData;
     }
 
@@ -121,6 +123,7 @@ contract CityGuard is SepoliaConfig {
     /// @param id The report ID
     /// @return encKey The FHE-encrypted key
     function getEncryptedKey(uint256 id) external view returns (eaddress encKey) {
+        require(id < _reports.length, "Report does not exist");
         return _reports[id].encryptedKey;
     }
 
