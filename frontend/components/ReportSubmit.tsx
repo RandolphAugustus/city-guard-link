@@ -45,6 +45,7 @@ export function ReportSubmit() {
   const [isConfirming, setIsConfirming] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   // Get contract address for current chain
   const contractAddress = chainId
@@ -101,7 +102,23 @@ export function ReportSubmit() {
       setContent("");
     } catch (err: unknown) {
       console.error(err);
-      setError(err instanceof Error ? err.message : "Failed to submit report");
+      const errorMessage = err instanceof Error ? err.message : "Failed to submit report";
+      
+      // Check if it's a network error and allow retry
+      if (errorMessage.includes("network") || errorMessage.includes("timeout") || errorMessage.includes("connection")) {
+        if (retryCount < 3) {
+          setRetryCount(prev => prev + 1);
+          setError(`Network error (attempt ${retryCount + 1}/3). Retrying...`);
+          // Retry after a delay
+          setTimeout(() => handleSubmit(e), 2000);
+          return;
+        } else {
+          setError("Network error: Maximum retry attempts reached. Please try again later.");
+        }
+      } else {
+        setError(errorMessage);
+      }
+      setRetryCount(0);
     } finally {
       setIsConfirming(false);
       setIsSubmitting(false);
