@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import { useAccount } from "wagmi";
 import { Contract } from "ethers";
 import { keccak256, toUtf8Bytes } from "ethers";
@@ -11,7 +11,6 @@ import { CityGuardABI } from "@/abi/CityGuardABI";
 import { chacha20Decrypt } from "@/utils/chacha20";
 import { hexToBytes, bytesToUtf8 } from "@/utils/bytes";
 import { FileText, Lock, Unlock, AlertCircle, RefreshCw } from "lucide-react";
-import { useEffect } from "react";
 
 function deriveKeyFromPasswordAddress(passwordAddress: string): Uint8Array {
   const hash = keccak256(toUtf8Bytes(passwordAddress.toLowerCase()));
@@ -56,8 +55,8 @@ export function ReportList() {
     ? CityGuardAddresses[chainId.toString() as keyof typeof CityGuardAddresses]?.address
     : undefined;
 
-  // Fetch reports
-  const fetchReports = async () => {
+  // Fetch reports with useCallback to prevent unnecessary re-renders
+  const fetchReports = useCallback(async () => {
     if (!address || !contractAddress || !ethersReadonlyProvider) return;
 
     setLoading(true);
@@ -88,11 +87,11 @@ export function ReportList() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [address, contractAddress, ethersReadonlyProvider]);
 
   useEffect(() => {
     fetchReports();
-  }, [address, contractAddress, ethersReadonlyProvider]);
+  }, [fetchReports]);
 
   if (!address) {
     return (
