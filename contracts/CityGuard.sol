@@ -49,6 +49,11 @@ contract CityGuard is SepoliaConfig {
         externalEaddress encKey,
         bytes calldata inputProof
     ) external {
+        require(bytes(title).length > 0, "Title cannot be empty");
+        require(bytes(title).length <= 200, "Title too long");
+        require(encryptedData.length > 0, "Encrypted data cannot be empty");
+        require(encryptedData.length <= 10000, "Encrypted data too large");
+        
         eaddress key = FHE.fromExternal(encKey, inputProof);
 
         Report memory r;
