@@ -22,8 +22,25 @@ export function hexToBytes(hex: string): Uint8Array {
 }
 
 export function randomBytes(length: number): Uint8Array {
+  if (length <= 0) {
+    throw new Error("Length must be positive");
+  }
+  if (length > 65536) {
+    throw new Error("Length too large for secure random generation");
+  }
+  
   const bytes = new Uint8Array(length);
-  crypto.getRandomValues(bytes);
+  
+  // Use crypto.getRandomValues with fallback for older browsers
+  if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+    crypto.getRandomValues(bytes);
+  } else if (typeof window !== 'undefined' && window.crypto && window.crypto.getRandomValues) {
+    window.crypto.getRandomValues(bytes);
+  } else {
+    // Fallback for environments without crypto (should not happen in modern browsers)
+    throw new Error("Secure random number generation not available");
+  }
+  
   return bytes;
 }
 
