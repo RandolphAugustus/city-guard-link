@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useAccount } from "wagmi";
 import { Contract } from "ethers";
 import { keccak256, toUtf8Bytes } from "ethers";
@@ -47,10 +47,12 @@ export function ReportSubmit() {
   const [error, setError] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
 
-  // Get contract address for current chain
-  const contractAddress = chainId
-    ? CityGuardAddresses[chainId.toString() as keyof typeof CityGuardAddresses]?.address
-    : undefined;
+  // Get contract address for current chain with proper type safety
+  const contractAddress = useMemo(() => {
+    if (!chainId) return undefined;
+    const chainKey = chainId.toString() as keyof typeof CityGuardAddresses;
+    return CityGuardAddresses[chainKey]?.address;
+  }, [chainId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
