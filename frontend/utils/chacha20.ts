@@ -75,6 +75,16 @@ function chacha20Block(key: Uint8Array, counter: number, nonce: Uint8Array): Uin
 }
 
 export function chacha20Encrypt(key: Uint8Array, nonce: Uint8Array, plaintext: Uint8Array): Uint8Array {
+  if (key.length !== 32) {
+    throw new Error("Key must be exactly 32 bytes");
+  }
+  if (nonce.length !== 12) {
+    throw new Error("Nonce must be exactly 12 bytes");
+  }
+  if (plaintext.length === 0) {
+    throw new Error("Plaintext cannot be empty");
+  }
+  
   const ciphertext = new Uint8Array(plaintext.length);
   let counter = 0;
   let pos = 0;
@@ -96,6 +106,16 @@ export function chacha20Encrypt(key: Uint8Array, nonce: Uint8Array, plaintext: U
 }
 
 export function chacha20Decrypt(key: Uint8Array, nonce: Uint8Array, ciphertext: Uint8Array): Uint8Array {
+  if (key.length !== 32) {
+    throw new Error("Key must be exactly 32 bytes");
+  }
+  if (nonce.length !== 12) {
+    throw new Error("Nonce must be exactly 12 bytes");
+  }
+  if (ciphertext.length === 0) {
+    throw new Error("Ciphertext cannot be empty");
+  }
+  
   // ChaCha20 is symmetric - encryption and decryption are the same operation
   return chacha20Encrypt(key, nonce, ciphertext);
 }
