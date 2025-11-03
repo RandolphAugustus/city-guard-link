@@ -83,7 +83,14 @@ export function ReportList() {
       setReports(reportData);
     } catch (err) {
       console.error(err);
-      setError("Failed to fetch reports");
+      const errorMessage = err instanceof Error ? err.message : "Failed to fetch reports";
+      if (errorMessage.includes("network") || errorMessage.includes("timeout")) {
+        setError("Network error: Please check your connection and try again");
+      } else if (errorMessage.includes("user rejected")) {
+        setError("Transaction was rejected by user");
+      } else {
+        setError("Failed to fetch reports. Please try again later.");
+      }
     } finally {
       setLoading(false);
     }
