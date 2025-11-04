@@ -179,4 +179,26 @@ describe("CityGuard", function () {
       cityGuardContract.connect(signers.bob).updateReportStatus(0, 1)
     ).to.be.revertedWith("Only reporter can update status");
   });
+
+  it("should validate input parameters", async function () {
+    const mockKey = "0x1234567890123456789012345678901234567890";
+    const encryptedKey = await fhevm
+      .createEncryptedInput(cityGuardContractAddress, signers.alice.address)
+      .addAddress(mockKey)
+      .encrypt();
+
+    // Test empty title
+    await expect(
+      cityGuardContract
+        .connect(signers.alice)
+        .submitReport("", ethers.toUtf8Bytes("content"), encryptedKey.handles[0], encryptedKey.inputProof)
+    ).to.be.revertedWith("Title cannot be empty");
+
+    // Test empty encrypted data
+    await expect(
+      cityGuardContract
+        .connect(signers.alice)
+        .submitReport("Title", "0x", encryptedKey.handles[0], encryptedKey.inputProof)
+    ).to.be.revertedWith("Encrypted data cannot be empty");
+  });
 });

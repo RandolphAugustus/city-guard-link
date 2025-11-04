@@ -102,6 +102,7 @@ export function ReportSubmit() {
       setSuccess(true);
       setTitle("");
       setContent("");
+      setRetryCount(0); // Reset retry count on success
     } catch (err: unknown) {
       console.error(err);
       const errorMessage = err instanceof Error ? err.message : "Failed to submit report";
