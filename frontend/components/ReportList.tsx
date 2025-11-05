@@ -198,7 +198,14 @@ function ReportItem({ report, contractAddress, instance, ethersSigner, fhevmStat
   const [error, setError] = useState<string | null>(null);
 
   const createdAt = useMemo(() => {
-    return new Date(Number(report.createdAt) * 1000).toLocaleString();
+    const date = new Date(Number(report.createdAt) * 1000);
+    return date.toLocaleString(undefined, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }, [report.createdAt]);
 
   const decrypt = async () => {
