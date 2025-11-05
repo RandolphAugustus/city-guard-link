@@ -7,6 +7,8 @@ import {SepoliaConfig} from "@fhevm/solidity/config/ZamaConfig.sol";
 /// @title CityGuard - Encrypted Report Storage with FHE
 /// @notice Stores encrypted citizen reports with FHE-protected sensitive data
 /// @dev Uses ChaCha20 for content encryption and FHE eaddress for key protection
+/// @author CityGuard Team
+/// @custom:security-contact security@cityguard.org
 contract CityGuard is SepoliaConfig {
     struct Report {
         address reporter;
