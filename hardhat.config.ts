@@ -10,6 +10,16 @@ import { parseUnits } from "ethers";
 import { vars as _vars } from "hardhat/config";
 import "dotenv/config";
 import "solidity-coverage";
+import "@nomicfoundation/hardhat-toolbox";
+
+// Environment variable validation
+if (!process.env.SEPOLIA_PRIVATE_KEY && process.env.NODE_ENV !== "test") {
+  console.warn("Warning: SEPOLIA_PRIVATE_KEY not set. Sepolia deployment will not work.");
+}
+
+if (!process.env.SEPOLIA_RPC_URL && process.env.NODE_ENV !== "test") {
+  console.warn("Warning: SEPOLIA_RPC_URL not set. Sepolia deployment will not work.");
+}
 
 import "./tasks/accounts";
 import "./tasks/CityGuard";
