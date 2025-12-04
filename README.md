@@ -7,7 +7,7 @@ City Guard Link is a decentralized application that enables citizens to submit e
 ## 🎥 Demo
 
 ### Live Demo
-🌐 **[Try City Guard Link](https://city-guard-link.vercel.app/)**
+🌐 **[Try City Guard Link](https://city-guard-link-atbst.vercel.app/)**
 
 ### Video Demonstration
 📹 **[Watch Demo Video](./city-guard-link-demo.mp4)**
